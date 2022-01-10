@@ -1,8 +1,5 @@
 #include "pipex.h"
 
-
-
-/* return fd */
 int	get_filefd(t_info info, int i)
 {
 	int	fd;
@@ -23,7 +20,7 @@ void	dup2_func(t_info info, int filefd, int i)
 		dup2(filefd, 0);
 		dup2(info.pipefd[i - 2][1], 1);
 	}
-	else if (filefd != NOFILE && i + 2 == info.argc) // 最後
+	else if (filefd != NOFILE && i + 2 == info.argc)
 	{
 		// dup2(filefd, 1);
 		dup2(info.pipefd[i - 3][0], 0);
@@ -32,14 +29,14 @@ void	dup2_func(t_info info, int filefd, int i)
 	{
 		dup2(info.pipefd[i - 3][0], 0);
 		dup2(info.pipefd[i - 2][1], 1);
-	}	
+	}
 }
 
 void	close_func(t_info info, int filefd, int i)
 {
 	if (filefd != NOFILE && i == 2)
 		close(info.pipefd[i - 2][0]);
-	else if (filefd != NOFILE && i + 2 == info.argc) // 最後
+	else if (filefd != NOFILE && i + 2 == info.argc)
 		close(info.pipefd[i - 3][1]);
 	else
 		close(info.pipefd[i - 3][1]);
@@ -61,23 +58,26 @@ void	child_exe(t_info info, int i)
 	return ;
 }
 
+void	set_elements(t_info *info, int i)
+{
+	info->file = NULL;
+	if (i == 2)
+		info->file = info->argv[i - 1];
+	else if (i + 2 == info->argc)
+		info->file = info->argv[i + 1];
+	info->cmd = ft_split(info->argv[i], ' ');
+	convert_to_cmd_full_path(info);
+}
+
 void	start_process(t_info info)
 {
 	int	wstatus;
-	int	fd;
 	int	i;
 
 	i = 2;
 	while (i + 1 < info.argc)
 	{
-		info.file = NULL;
-		if (i == 2)
-			info.file = info.argv[i - 1];
-		else if (i + 2 == info.argc)
-			info.file = info.argv[i + 1];
-		info.cmd = ft_split(info.argv[i], ' ');
-		convert_to_cmd_full_path(&info);
-
+		set_elements(&info, i);
 		if (pipe(info.pipefd[i - 2]) < 0)
 		{
 			perror("pipe");
@@ -93,16 +93,17 @@ void	start_process(t_info info)
 			}
 			waitpid(info.pid, &wstatus, WUNTRACED);
 		}
-		printf("\n\n");
 		i++;
 	}
 	exit(0);
 }
 
-int    main(int argc, char **argv, char **envp)
+int	main(int argc, char **argv, char **envp)
 {
     t_info    	info;
 	int			i;
+
+	printf("\n");
 
     info.argv = argv;
 	info.argc = argc;

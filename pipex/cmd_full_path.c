@@ -23,7 +23,6 @@ void	convert_to_cmd_full_path(t_info *info)
 	if (!access(info->cmd[0], R_OK))
 	{
 		info->cmd_full_path = info->cmd[0];
-		printf("full path input[%s]\n", info->cmd_full_path);
 		return ;
 	}
 	e_index = path_index(*info);
@@ -33,12 +32,10 @@ void	convert_to_cmd_full_path(t_info *info)
 	c_index = 0;
 	while (all_paths[c_index])
 	{
-
 		info->cmd_full_path = ft_strjoin(all_paths[c_index], "/");
 		info->cmd_full_path = ft_strjoin(info->cmd_full_path, info->cmd[0]);
 		if (!access(info->cmd_full_path, R_OK))
 		{
-			printf("relative path [%s]\n", info->cmd_full_path);
 			return ;
 		}
 		c_index++;
