@@ -7,7 +7,10 @@ int	get_filefd(t_info info, int i)
 	if (info.file && i == 2)
 		fd = open(info.file, R_OK);
 	else if (info.file && i + 2 == info.argc)
-		fd = open(info.file, W_OK);
+	{
+		unlink(info.file);
+		fd = open(info.file, O_CREAT | W_OK, 0644);
+	}
 	else
 		fd = NOFILE;
 	return (fd);
@@ -22,7 +25,7 @@ void	dup2_func(t_info info, int filefd, int i)
 	}
 	else if (filefd != NOFILE && i + 2 == info.argc)
 	{
-		// dup2(filefd, 1);
+		dup2(filefd, 1);
 		dup2(info.pipefd[i - 3][0], 0);
 	}
 	else

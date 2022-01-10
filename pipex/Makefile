@@ -29,7 +29,7 @@ fclean: clean
 re: fclean all
 
 retest: ${NAME}
-	./${NAME} pipex.h cat "head -n 4" "tail -n 2" wc hoge2
+	./${NAME} pipex.h cat "head -n 4" "tail -n 2" file
 
 test: fclean retest
 
