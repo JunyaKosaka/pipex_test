@@ -86,8 +86,10 @@ void	start_process(t_info info)
 		info.pid = fork();
 		if (info.pid == 0)
 			child_exe(info, i);
-		else {
-			if (i != 2) {
+		else
+		{
+			if (i != 2)
+			{
 				close(info.pipefd[i - 3][0]);
 				close(info.pipefd[i - 3][1]);
 			}
@@ -100,14 +102,13 @@ void	start_process(t_info info)
 
 int	main(int argc, char **argv, char **envp)
 {
-    t_info    	info;
+	t_info		info;
 	int			i;
 
 	printf("\n");
-
-    info.argv = argv;
+	info.argv = argv;
 	info.argc = argc;
-    info.envp = envp;
+	info.envp = envp;
 	info.pipefd = (int **)malloc(sizeof(int *) * (argc - 3));
 	if (!info.pipefd)
 		exit(1);
@@ -118,6 +119,5 @@ int	main(int argc, char **argv, char **envp)
 		i++;
 	}
 	start_process(info);
-
-    exit(0);
+	exit(0);
 }

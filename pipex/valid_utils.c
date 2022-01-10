@@ -2,9 +2,9 @@
 
 bool	is_valid_file(t_info info)
 {
-		if (access(info.argv[1], R_OK) == 0)
-			return (true);
-		return (false);
+	if (access(info.argv[1], R_OK) == 0)
+		return (true);
+	return (false);
 }
 
 static	int	path_index(t_info info)
@@ -12,15 +12,14 @@ static	int	path_index(t_info info)
 	int	index;
 
 	index = 0;
-	while(info.envp[index])
+	while (info.envp[index])
 	{
-			if(!ft_strncmp(info.envp[index], "PATH=", 5))
-					return (index);
-			index++;
+		if (!ft_strncmp(info.envp[index], "PATH=", 5))
+			return (index);
+		index++;
 	}
 	return (-1);
 }
-
 
 bool	is_valid_cmds(t_info info)
 {
@@ -31,7 +30,7 @@ bool	is_valid_cmds(t_info info)
 
 	e_index = path_index(info);
 	if (e_index == -1)
-			return (false);
+		return (false);
 	all_paths = ft_split(&(info.envp[e_index][5]), ':');
 	c_index = 0;
 	while (all_paths[c_index])
@@ -47,4 +46,3 @@ bool	is_valid_cmds(t_info info)
 	}
 	return (false);
 }
-

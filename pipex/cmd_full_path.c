@@ -5,11 +5,11 @@ static	int	path_index(t_info info)
 	int	index;
 
 	index = 0;
-	while(info.envp[index])
+	while (info.envp[index])
 	{
-			if(!ft_strncmp(info.envp[index], "PATH=", 5))
-					return (index);
-			index++;
+		if (!ft_strncmp(info.envp[index], "PATH=", 5))
+			return (index);
+		index++;
 	}
 	return (-1);
 }
@@ -35,9 +35,7 @@ void	convert_to_cmd_full_path(t_info *info)
 		info->cmd_full_path = ft_strjoin(all_paths[c_index], "/");
 		info->cmd_full_path = ft_strjoin(info->cmd_full_path, info->cmd[0]);
 		if (!access(info->cmd_full_path, R_OK))
-		{
 			return ;
-		}
 		c_index++;
 	}
 	exit(1);
