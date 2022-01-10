@@ -12,7 +12,7 @@
 
 typedef struct s_info
 {
-	int		pipefd[3][2];
+	int		*pipefd[2];
 	int		argc;
 	char	**argv;
 	char	**envp;

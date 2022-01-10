@@ -112,7 +112,7 @@ void	child_exe(t_info info, int i)
 
 	input_fd = 0;
 	output_fd = 1;
-	if (info.file != NULL && i == 2)
+	if (info.file != NULL && i == 2)//1回目
 	{
 		input_fd = open(info.file, R_OK);
 		fprintf(stderr, "input_fd%d\n", input_fd);
@@ -122,7 +122,7 @@ void	child_exe(t_info info, int i)
 		close(info.pipefd[i - 2][0]);
 		close(info.pipefd[i - 2][1]);
 	}
-	else if (info.file != NULL && i + 2 == info.argc)
+	else if (info.file != NULL && i + 2 == info.argc)//3回目
 	{
 		output_fd = open(info.file, W_OK);
 		fprintf(stderr, "%d\n", output_fd);
@@ -132,16 +132,20 @@ void	child_exe(t_info info, int i)
 
 		dup2(info.pipefd[i - 3][0], 0);
 		close(output_fd);
-		close(info.pipefd[i - 3][0]); close(info.pipefd[i - 3][1]);
-		close(info.pipefd[i - 2][0]); close(info.pipefd[i - 2][1]);
+		// close(info.pipefd[i - 3][0]);//無駄かも
+		close(info.pipefd[i - 3][1]);
+		// close(info.pipefd[i - 2][0]);
+		close(info.pipefd[i - 2][1]);
 	}
-	else
+	else//2回目
 	{
 		fprintf(stderr, "2nd i %d\n", i);
 		dup2(info.pipefd[i - 3][0], 0);
 		dup2(info.pipefd[i - 2][1], 1);
-		close(info.pipefd[i - 3][0]); close(info.pipefd[i - 3][1]);
-		close(info.pipefd[i - 2][0]); close(info.pipefd[i - 2][1]);
+		// close(info.pipefd[i - 3][0]);//無駄かも
+		close(info.pipefd[i - 3][1]);
+		// close(info.pipefd[i - 2][0]);
+		close(info.pipefd[i - 2][1]);
 	}
 
 	// exit(0);
@@ -163,32 +167,29 @@ void	start_process(t_info info)
 	while (i + 1 < info.argc)
 	{
 		fprintf(stderr, "%d:%d\n", i, info.argc);
+
+		info.file = NULL;
 		if (i == 2)
-		{
-			info.cmd = ft_split(info.argv[i], ' ');
 			info.file = info.argv[i - 1];
-		}
 		else if (i + 2 == info.argc)
-		{
-			printf("running\n");
-			info.cmd = ft_split(info.argv[i], ' ');
 			info.file = info.argv[i + 1];
-		}
-		else
-		{
-			info.cmd = ft_split(info.argv[i], ' ');
-			info.file = NULL;
-		}
+		info.cmd = ft_split(info.argv[i], ' ');
 		convert_to_cmd_full_path(&info);
+
 		j = 0;
 		printf("filename:%s\n", info.file);
 		printf("command elements");
 		while (info.cmd[j] != NULL)
 			printf("[%s]", info.cmd[j++]);
 		printf("\n");
-
 		fprintf(stderr, "i %d, argc %d\n", i , info.argc);
-		pipe(info.pipefd[i - 2]);
+
+
+		if (pipe(info.pipefd[i - 2]) < 0)
+		{
+			perror("pipe");
+			exit(-1);
+		}
 		info.pid = fork();
 		if (info.pid == 0)
 			child_exe(info, i);
@@ -209,24 +210,11 @@ void	start_process(t_info info)
 int    main(int argc, char **argv, char **envp)
 {
     t_info    info;
-	int			i;
 
-	// i = 2;
-	// info.cmd = ft_split(info.argv[2], ' ');
-	// info.file = info.argv[1];
-	// printf("command element:[%s][%s]\n", info.cmd[0], info.cmd[1]);
-	// convert_to_cmd_full_path(&info);
-	i = 0;
-	printf("%p\n", &envp);
-	printf("%p\n", &i);
     info.argv = argv;
 	info.argc = argc;
     info.envp = envp;
-	// if (pipe(info.pipefd) < 0)
-	// {
-	// 	perror("pipe");
-	// 	exit(-1);
-	// }
+
 	start_process(info);
 
     exit(0);
