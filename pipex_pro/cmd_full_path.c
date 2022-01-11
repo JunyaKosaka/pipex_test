@@ -38,6 +38,7 @@ void	convert_to_cmd_full_path(t_info *info)
 			return ;
 		c_index++;
 	}
-	printf("no cmd\n");
+	write(2, "pipex: command not found: ", 26);
+	ft_putendl_fd(info->cmd[0], 2);
 	exit(1);
 }

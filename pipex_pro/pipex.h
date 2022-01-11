@@ -11,7 +11,6 @@
 # include <fcntl.h>
 # include "libft/libft.h"
 
-# include <string.h>
 # include <errno.h>
 # include <sys/types.h>
 # include <sys/uio.h>

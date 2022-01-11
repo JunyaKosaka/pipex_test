@@ -58,13 +58,12 @@ static void	child_exe(t_info info, int i)
 	int	filefd;
 	int	total_len;
 
-	total_len = ft_strlen(info.total_document);
 	if (info.is_here_doc == true && i == 2)
 	{
+		total_len = ft_strlen(info.total_document);
 		close(info.pipefd[0][0]);
 		write(info.pipefd[0][1], info.total_document, total_len);
 		close(info.pipefd[0][1]);
-
 		exit(0);
 	}
 	filefd = get_filefd(info, i);
@@ -73,6 +72,8 @@ static void	child_exe(t_info info, int i)
 	dup2_func(info, filefd, i);
 	close_func(info, filefd, i);
 	execve(info.cmd_full_path, info.cmd, info.envp);
+
+	// ft_putendl_fd("pipex: illegal option", 2);
 	return ;
 }
 

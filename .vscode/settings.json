@@ -3,6 +3,7 @@
 		"fcntl.h": "c"
 	},
 	"cSpell.ignoreWords": [
-		"execve"
+		"execve",
+		"pipex"
 	]
 }

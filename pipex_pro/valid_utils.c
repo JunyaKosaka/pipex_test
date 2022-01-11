@@ -2,6 +2,7 @@
 
 bool	is_valid_file(t_info info)
 {
+	printf("5: %d\n", errno);
 	if (access(info.argv[1], R_OK) == 0)
 		return (true);
 	return (false);

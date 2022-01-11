@@ -34,6 +34,15 @@ int	main(int argc, char **argv, char **envp)
 		info.limiter = argv[2];  // エラー処理
 		get_here_doc(&info);
 	}
+	else
+	{
+		if (!is_valid_file(info))
+		{
+			ft_putstr_fd("pipex: ", 2);
+			perror(info.argv[1]);
+			exit(1);
+		}	
+	}
 	info.pipefd = (int **)malloc(sizeof(int *) * (argc - 3));
 	if (!info.pipefd)
 		exit(1);
@@ -46,4 +55,3 @@ int	main(int argc, char **argv, char **envp)
 	start_process(info);
 	exit(0);
 }
-

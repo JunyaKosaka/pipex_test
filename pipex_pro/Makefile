@@ -1,7 +1,8 @@
 NAME		= pipex
 
 SRCS		= pipex.c cmd_full_path.c start_process.c \
-			get_next_line.c get_next_line_utils.c
+			get_next_line.c get_next_line_utils.c \
+			valid_utils.c \
 
 OBJS		= $(SRCS:%.c=%.o)
 
@@ -16,6 +17,7 @@ RM			= rm -f
 all: $(NAME)
 
 $(NAME): $(OBJS)
+	make -C ./libft
 	${CC} ${CFLAGS} -o ${NAME} ${OBJS} ${LIBFT}
 
 .c.o:
@@ -31,7 +33,8 @@ fclean: clean
 re: fclean all
 
 retest: ${NAME}
-	./${NAME} pipex.h cat "head -n 3" file
+	./${NAME} pipex.h cat "head -xxn 3" file
+	cat file
 
 test: fclean retest
 
