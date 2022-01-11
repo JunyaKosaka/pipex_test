@@ -30,8 +30,10 @@ int	main(int argc, char **argv, char **envp)
 	info.is_here_doc = false;
 	if (!ft_strncmp(argv[1], "here_doc", 9))
 	{
+		if (argc < 6)
+			exit(error_handler());
 		info.is_here_doc = true;
-		info.limiter = argv[2];  // エラー処理
+		info.limiter = argv[2];
 		get_here_doc(&info);
 	}
 	else

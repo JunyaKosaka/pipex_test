@@ -72,7 +72,6 @@ static void	child_exe(t_info info, int i)
 	dup2_func(info, filefd, i);
 	close_func(info, filefd, i);
 	execve(info.cmd_full_path, info.cmd, info.envp);
-
 	// ft_putendl_fd("pipex: illegal option", 2);
 	return ;
 }
@@ -120,7 +119,7 @@ void	start_process(t_info info)
 		}
 		i++;
 	}
-	exit(0);
+	exit(wstatus);  // 終了ステータス
 }
 
 
