@@ -37,7 +37,7 @@ typedef struct s_info
 	bool	is_here_doc;
 	char	*total_document;
 	char	*limiter;
-	pid_t	pid;
+	pid_t	pid[2];
 }	t_info;
 
 bool	is_valid_file(t_info info);

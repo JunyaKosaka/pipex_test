@@ -34,11 +34,12 @@ void	convert_to_cmd_full_path(t_info *info)
 	{
 		info->cmd_full_path = ft_strjoin(all_paths[c_index], "/");
 		info->cmd_full_path = ft_strjoin(info->cmd_full_path, info->cmd[0]);
-		if (!access(info->cmd_full_path, R_OK))
+		if (!access(info->cmd_full_path, X_OK))
 			return ;
 		c_index++;
 	}
-	write(2, "pipex: command not found: ", 26);
-	ft_putendl_fd(info->cmd[0], 2);
+	// write(2, "pipex: command not found: ", 26);
+	// ft_putendl_fd(info->cmd[0], 2);
+	perror(info->cmd[0]);
 	exit(1);
 }

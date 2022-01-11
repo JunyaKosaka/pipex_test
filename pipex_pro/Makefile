@@ -33,8 +33,8 @@ fclean: clean
 re: fclean all
 
 retest: ${NAME}
-	./${NAME} pipex.h cat "head -xxn 3" file
-	cat file
+	./${NAME} big.txt cat "head -n 3" file
+	wc file
 
 test: fclean retest
 

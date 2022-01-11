@@ -1,7 +1,14 @@
 エラーの出る順番
 cat | ls などの実行順序
+sleep 5 | ls
 大きいデータサイズ
 終了ステータス 0~255
+
+最大プロセス数:　引数のコマンド数大きくすると？
+パイプのサイズ
+システムコールエラーチェック
+パイプmalloc
+waitpit whileで回す
 
 エラー処理
 ：command not found / No such file or directory / illegal option

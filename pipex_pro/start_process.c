@@ -68,7 +68,7 @@ static void	child_exe(t_info info, int i)
 	}
 	filefd = get_filefd(info, i);
 	if (filefd == -1)
-		exit(1);
+		exit(1);//エラー文　mallocリークチェック
 	dup2_func(info, filefd, i);
 	close_func(info, filefd, i);
 	execve(info.cmd_full_path, info.cmd, info.envp);
@@ -104,9 +104,9 @@ void	start_process(t_info info)
 			perror("pipe");
 			exit(-1);
 		}
-		info.pid = fork();
+		info.pid[i - 2] = fork();
 
-		if (info.pid == 0)
+		if (info.pid[i - 2] == 0)
 			child_exe(info, i);
 		else
 		{
@@ -115,10 +115,12 @@ void	start_process(t_info info)
 				close(info.pipefd[i - 3][0]);
 				close(info.pipefd[i - 3][1]);
 			}
-			waitpid(info.pid, &wstatus, WUNTRACED);
 		}
 		i++;
 	}
+	waitpid(info.pid[0], &wstatus, WUNTRACED);
+	waitpid(info.pid[1], &wstatus, WUNTRACED);
+
 	exit(wstatus);  // 終了ステータス
 }
 
