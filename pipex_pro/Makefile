@@ -1,6 +1,7 @@
 NAME		= pipex
 
-SRCS		= pipex.c cmd_full_path.c
+SRCS		= pipex.c cmd_full_path.c start_process.c \
+			get_next_line.c get_next_line_utils.c
 
 OBJS		= $(SRCS:%.c=%.o)
 
@@ -21,6 +22,7 @@ $(NAME): $(OBJS)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
+	make clean -C ./libft
 	$(RM) $(OBJS)
 
 fclean: clean

@@ -1,6 +1,6 @@
 #include "pipex.h"
 
-int	get_filefd(t_info info, int i)
+static int	get_filefd(t_info info, int i)
 {
 	int	fd;
 
@@ -16,7 +16,7 @@ int	get_filefd(t_info info, int i)
 	return (fd);
 }
 
-void	dup2_func(t_info info, int filefd, int i)
+static void	dup2_func(t_info info, int filefd, int i)
 {
 	if (filefd != NOFILE && i == 2)
 	{
@@ -35,7 +35,7 @@ void	dup2_func(t_info info, int filefd, int i)
 	}
 }
 
-void	close_func(t_info info, int filefd, int i)
+static void	close_func(t_info info, int filefd, int i)
 {
 	if (filefd != NOFILE && i == 2)
 		close(info.pipefd[i - 2][0]);
@@ -48,7 +48,7 @@ void	close_func(t_info info, int filefd, int i)
 	close(info.pipefd[i - 2][1]);
 }
 
-void	child_exe(t_info info, int i)
+static void	child_exe(t_info info, int i)
 {
 	int	filefd;
 
@@ -61,7 +61,7 @@ void	child_exe(t_info info, int i)
 	return ;
 }
 
-void	set_elements(t_info *info, int i)
+static void	set_elements(t_info *info, int i)
 {
 	info->file = NULL;
 	if (i == 2)
@@ -77,7 +77,7 @@ void	start_process(t_info info)
 	int	wstatus;
 	int	i;
 
-	i = 2;
+	i = 2;  // here_docの時は i = 3
 	while (i + 1 < info.argc)
 	{
 		set_elements(&info, i);
@@ -100,27 +100,5 @@ void	start_process(t_info info)
 		}
 		i++;
 	}
-	exit(0);
-}
-
-int	main(int argc, char **argv, char **envp)
-{
-	t_info		info;
-	int			i;
-
-	printf("\n");
-	info.argv = argv;
-	info.argc = argc;
-	info.envp = envp;
-	info.pipefd = (int **)malloc(sizeof(int *) * (argc - 3));
-	if (!info.pipefd)
-		exit(1);
-	i = 0;
-	while (i < argc - 3)
-	{
-		info.pipefd[i] = (int *)malloc(sizeof(int) * 2);
-		i++;
-	}
-	start_process(info);
 	exit(0);
 }
