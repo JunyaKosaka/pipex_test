@@ -38,5 +38,6 @@ void	convert_to_cmd_full_path(t_info *info)
 			return ;
 		c_index++;
 	}
+	printf("no cmd\n");
 	exit(1);
 }

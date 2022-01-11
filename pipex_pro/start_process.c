@@ -8,8 +8,13 @@ static int	get_filefd(t_info info, int i)
 		fd = open(info.file, R_OK);
 	else if (info.file && i + 2 == info.argc)
 	{
-		unlink(info.file);
-		fd = open(info.file, O_CREAT | W_OK, 0644);
+		if (info.is_here_doc == false)
+		{
+			unlink(info.file);
+			fd = open(info.file, O_CREAT | W_OK, 0644);
+		}
+		else
+			fd = open(info.file, O_APPEND | W_OK | O_CREAT, 0644);
 	}
 	else
 		fd = NOFILE;
@@ -51,7 +56,17 @@ static void	close_func(t_info info, int filefd, int i)
 static void	child_exe(t_info info, int i)
 {
 	int	filefd;
+	int	total_len;
 
+	total_len = ft_strlen(info.total_document);
+	if (info.is_here_doc == true && i == 2)
+	{
+		close(info.pipefd[0][0]);
+		write(info.pipefd[0][1], info.total_document, total_len);
+		close(info.pipefd[0][1]);
+
+		exit(0);
+	}
 	filefd = get_filefd(info, i);
 	if (filefd == -1)
 		exit(1);
@@ -64,12 +79,15 @@ static void	child_exe(t_info info, int i)
 static void	set_elements(t_info *info, int i)
 {
 	info->file = NULL;
-	if (i == 2)
+	if (i == 2 && !info->is_here_doc)
 		info->file = info->argv[i - 1];
 	else if (i + 2 == info->argc)
 		info->file = info->argv[i + 1];
-	info->cmd = ft_split(info->argv[i], ' ');
-	convert_to_cmd_full_path(info);
+	if (!(info->is_here_doc && i == 2))
+	{
+		info->cmd = ft_split(info->argv[i], ' ');
+		convert_to_cmd_full_path(info);
+	}
 }
 
 void	start_process(t_info info)
@@ -77,7 +95,7 @@ void	start_process(t_info info)
 	int	wstatus;
 	int	i;
 
-	i = 2;  // here_docの時は i = 3
+	i = 2;
 	while (i + 1 < info.argc)
 	{
 		set_elements(&info, i);
@@ -87,6 +105,7 @@ void	start_process(t_info info)
 			exit(-1);
 		}
 		info.pid = fork();
+
 		if (info.pid == 0)
 			child_exe(info, i);
 		else
@@ -102,3 +121,6 @@ void	start_process(t_info info)
 	}
 	exit(0);
 }
+
+
+

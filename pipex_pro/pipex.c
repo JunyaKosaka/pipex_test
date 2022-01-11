@@ -28,13 +28,11 @@ int	main(int argc, char **argv, char **envp)
 	info.argc = argc;
 	info.envp = envp;
 	info.is_here_doc = false;
-	// heredocと分岐　argc -= 2
 	if (!ft_strncmp(argv[1], "here_doc", 9))
 	{
 		info.is_here_doc = true;
 		info.limiter = argv[2];  // エラー処理
 		get_here_doc(&info);
-		printf("%s\n", info.total_document);
 	}
 	info.pipefd = (int **)malloc(sizeof(int *) * (argc - 3));
 	if (!info.pipefd)

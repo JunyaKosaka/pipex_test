@@ -31,8 +31,14 @@ fclean: clean
 re: fclean all
 
 retest: ${NAME}
-	./${NAME} pipex.h cat "head -n 4" "tail -n 2" file
+	./${NAME} pipex.h cat "head -n 3" file
 
 test: fclean retest
+
+heretest: ${NAME}
+	./${NAME} here_doc aaa cat "head -n 2" "tail -n 1" wc file
+	cat file
+
+here: fclean heretest
 
 PHONY: fclean clean all re test retest
