@@ -15,7 +15,7 @@ waitpit whileで回す
 
 
 
-実装しなくていいかも：parse error near `\n'
+実装しなくていいかも：parse error near '\n'
 
 正常に実行されなかった場合、waitpid() は -1 を戻して、errno を次のいずれかの値に設定します。
 
@@ -24,3 +24,7 @@ command not found 本家の終了ステータスが127
 exitを削除して→info.error_statusを上書きしていく
 start_processをポインタ型に変更
 error_statusの取得方法を調べる
+
+errno 2は24行目アクセス関数で設定されてる(builtinの誤用)
+
+システムコールのエラー処理！！

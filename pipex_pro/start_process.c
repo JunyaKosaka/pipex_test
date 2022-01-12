@@ -80,10 +80,10 @@ static void	child_exe(t_info info, int i)
 		exit(1); //エラー文　mallocリークチェック
 	dup2_func(info, filefd, i);
 	close_func(info, filefd, i);
+	fprintf(stderr, "errno: %d\n", errno);
 	execve(info.cmd_full_path, info.cmd, info.envp);
 	// ft_putendl_fd("pipex: illegal option", 2);
-	exit(1) ;
-	// return ;
+	exit(127);
 }
 
 static void	set_elements(t_info *info, int i)
@@ -100,7 +100,7 @@ static void	set_elements(t_info *info, int i)
 	}
 }
 
-void	start_process(t_info info)
+int	start_process(t_info info)
 {
 	int	wstatus;
 	int	i;
@@ -108,6 +108,7 @@ void	start_process(t_info info)
 	i = 2;
 	while (i + 1 < info.argc)
 	{
+
 		set_elements(&info, i);
 		if (pipe(info.pipefd[i - 2]) < 0)
 		{
@@ -115,9 +116,10 @@ void	start_process(t_info info)
 			exit(-1);
 		}
 		info.pid[i - 2] = fork();
-
 		if (info.pid[i - 2] == 0)
-			child_exe(info, i);
+			{
+				child_exe(info, i);
+			}
 		else
 		{
 			if (i != 2)
@@ -133,16 +135,17 @@ void	start_process(t_info info)
 	{
 		int	res = waitpid(info.pid[i], &wstatus, WUNTRACED);
 		printf("125: %d %d\n", res, wstatus);
-		printf("127: %d %d\n", i, WEXITSTATUS(wstatus));
+		printf("127: %d %d %d\n", i, WIFEXITED(wstatus), WEXITSTATUS(wstatus));
 		if (res == -1)
 		{
 			exit(errno);// だめそう
 		}
 		i++;
 	}
-	printf("146\n");
+	printf("\n");
 	// exit(info.error_status);
 	// exit(wstatus);  // 終了ステータス
+	return (WEXITSTATUS(wstatus));
 }
 
 

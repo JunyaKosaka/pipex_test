@@ -47,7 +47,7 @@ void	convert_to_cmd_full_path(t_info *info);
 char	*get_next_line(int fd);
 void	*free_one(char **s);
 void	*free_all(char **s1, char **s2);
-void	start_process(t_info info);
+int		start_process(t_info info);
 int		error_handler(void);
 
 #endif

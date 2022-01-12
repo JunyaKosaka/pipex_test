@@ -33,7 +33,7 @@ fclean: clean
 re: fclean all
 
 retest: ${NAME}
-	./${NAME} big.txt cat "head -n 3" "tail -n 2" file
+	./${NAME} big.txt "cat" "head -?" file
 	wc file
 
 test: fclean retest
