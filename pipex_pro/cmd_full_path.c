@@ -14,15 +14,16 @@ static	int	path_index(t_info info)
 	return (-1);
 }
 
-void	convert_to_cmd_full_path(t_info *info)
+void	convert_to_cmd_full_path(t_info *info, int i)
 {
 	char	**all_paths;
 	int		e_index;
 	int		c_index;
 
-	if (!access(info->cmd[0], R_OK))
+	i -= 2;
+	if (!access(info->cmd[i][0], R_OK))
 	{
-		info->cmd_full_path = info->cmd[0];
+		info->cmd_full_path[i] = info->cmd[i][0];
 		return ;
 	}
 	e_index = path_index(*info);
@@ -32,14 +33,14 @@ void	convert_to_cmd_full_path(t_info *info)
 	c_index = 0;
 	while (all_paths[c_index])
 	{
-		info->cmd_full_path = ft_strjoin(all_paths[c_index], "/");
-		info->cmd_full_path = ft_strjoin(info->cmd_full_path, info->cmd[0]);
-		if (!access(info->cmd_full_path, X_OK))
+		info->cmd_full_path[i] = ft_strjoin(all_paths[c_index], "/");
+		info->cmd_full_path[i] = ft_strjoin(info->cmd_full_path[i], info->cmd[i][0]);
+		if (!access(info->cmd_full_path[i], X_OK))
 			return ;
 		c_index++;
 	}
 	write(2, "pipex: command not found: ", 26);
-	ft_putendl_fd(info->cmd[0], 2);
+	ft_putendl_fd(info->cmd[i][0], 2);
 	// perror(info->cmd[0]);
 	// strerror(127);
 	info->error_status = 127;

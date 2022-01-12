@@ -29,11 +29,12 @@ typedef struct s_info
 {
 	int		**pipefd;
 	int		argc;
+	int		process_cnt;
 	char	**argv;
 	char	**envp;
-	char	*cmd_full_path;
-	char	**cmd;
-	char	*file;
+	char	**cmd_full_path;
+	char	***cmd;
+	char	*file; // [2]
 	bool	is_here_doc;
 	char	*total_document;
 	char	*limiter;
@@ -43,12 +44,13 @@ typedef struct s_info
 
 bool	is_valid_file(t_info info);
 bool	is_valid_cmds(t_info info);
-void	convert_to_cmd_full_path(t_info *info);
+void	convert_to_cmd_full_path(t_info *info, int i);
 char	*get_next_line(int fd);
 void	*free_one(char **s);
 void	*free_all(char **s1, char **s2);
 int		start_process(t_info info);
 int		error_handler(void);
+int		free_all_info(t_info *info, bool error);
 
 #endif
 

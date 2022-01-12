@@ -1,0 +1,10 @@
+・get_next_lineで受け取ったものをまとめてパイプに送るのか、一行ずつパイプに送るのか
+・here_docで受け取るもののfdは何？
+
+str = get_next_line(fd)で受け取った文字を　write(pipefd[1], &str, len)でパイプに書き出す
+直接標準入力から受け取ってexecveを使うか
+
+
+
+・get_next_lineで受け取ったものをまとめて ok
+write(pipefd[1], &str, len)でパイプに書き出す

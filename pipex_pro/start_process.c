@@ -6,13 +6,12 @@ static int	get_filefd(t_info *info, int i)
 
 	if (info->file && i == 2)
 	{
-		if (!is_valid_file(*info)) // 子プロセスでやるべきかも？
+		if (!is_valid_file(*info))
 		{
 			ft_putstr_fd("pipex: ", 2);
 			perror(info->argv[1]);
 			info->error_status = errno;
 		}
-		// is_valid_file();
 		fd = open(info->file, R_OK);
 	}
 	else if (info->file && i + 2 == info->argc)
@@ -81,7 +80,7 @@ static void	child_exe(t_info info, int i)
 	dup2_func(info, filefd, i);
 	close_func(info, filefd, i);
 	fprintf(stderr, "errno: %d\n", errno);
-	execve(info.cmd_full_path, info.cmd, info.envp);
+	execve(info.cmd_full_path[i - 2], info.cmd[i - 2], info.envp);
 	// ft_putendl_fd("pipex: illegal option", 2);
 	exit(127);
 }
@@ -95,8 +94,8 @@ static void	set_elements(t_info *info, int i)
 		info->file = info->argv[i + 1];
 	if (!(info->is_here_doc && i == 2))
 	{
-		info->cmd = ft_split(info->argv[i], ' ');
-		convert_to_cmd_full_path(info);
+		info->cmd[i - 2] = ft_split(info->argv[i], ' ');
+		convert_to_cmd_full_path(info, i);
 	}
 }
 
@@ -108,18 +107,18 @@ int	start_process(t_info info)
 	i = 2;
 	while (i + 1 < info.argc)
 	{
-
 		set_elements(&info, i);
-		if (pipe(info.pipefd[i - 2]) < 0)
+		// 
+		if (i + 2 != info.argc && pipe(info.pipefd[i - 2]) < 0)
 		{
 			perror("pipe");
 			exit(-1);
 		}
 		info.pid[i - 2] = fork();
 		if (info.pid[i - 2] == 0)
-			{
-				child_exe(info, i);
-			}
+		{
+			child_exe(info, i);
+		}
 		else
 		{
 			if (i != 2)

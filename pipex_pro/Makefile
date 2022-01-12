@@ -3,6 +3,7 @@ NAME		= pipex
 SRCS		= pipex.c cmd_full_path.c start_process.c \
 			get_next_line.c get_next_line_utils.c \
 			valid_utils.c error_handler.c \
+			free.c \
 
 OBJS		= $(SRCS:%.c=%.o)
 
@@ -11,6 +12,7 @@ LIBFT		= libft.a
 CC			= gcc
 
 CFLAGS		= -Wall -Wextra -Werror
+# -fsanitize=address -g3
 
 RM			= rm -f
 
@@ -33,7 +35,7 @@ fclean: clean
 re: fclean all
 
 retest: ${NAME}
-	./${NAME} big.txt "cat" "head -?" file
+	./${NAME} small.txt "cat" "head -n 2" file
 	wc file
 
 test: fclean retest
