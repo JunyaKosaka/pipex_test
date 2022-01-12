@@ -33,11 +33,12 @@ typedef struct s_info
 	char	**envp;
 	char	*cmd_full_path;
 	char	**cmd;
-	char	*file;  // in outo
+	char	*file;
 	bool	is_here_doc;
 	char	*total_document;
 	char	*limiter;
-	pid_t	pid[2];
+	pid_t	*pid;
+	int		error_status;
 }	t_info;
 
 bool	is_valid_file(t_info info);

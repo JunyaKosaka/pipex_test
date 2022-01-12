@@ -1,7 +1,7 @@
 エラーの出る順番
 cat | ls などの実行順序
-sleep 5 | ls
-大きいデータサイズ
+sleep 5 | ls -> ok
+大きいデータサイズ -> ok
 終了ステータス 0~255
 
 最大プロセス数:　引数のコマンド数大きくすると？
@@ -16,3 +16,11 @@ waitpit whileで回す
 
 
 実装しなくていいかも：parse error near `\n'
+
+正常に実行されなかった場合、waitpid() は -1 を戻して、errno を次のいずれかの値に設定します。
+
+command not found 本家の終了ステータスが127
+
+exitを削除して→info.error_statusを上書きしていく
+start_processをポインタ型に変更
+error_statusの取得方法を調べる

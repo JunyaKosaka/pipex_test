@@ -36,15 +36,9 @@ int	main(int argc, char **argv, char **envp)
 		info.limiter = argv[2];
 		get_here_doc(&info);
 	}
-	else
-	{
-		if (!is_valid_file(info))
-		{
-			ft_putstr_fd("pipex: ", 2);
-			perror(info.argv[1]);
-			exit(1);
-		}	
-	}
+	info.pid = (pid_t *)malloc(sizeof(pid_t) * (argc - 3 - info.is_here_doc));
+	if (!info.pid)
+		exit(1);  // 要修正
 	info.pipefd = (int **)malloc(sizeof(int *) * (argc - 3));
 	if (!info.pipefd)
 		exit(1);
@@ -55,5 +49,6 @@ int	main(int argc, char **argv, char **envp)
 		i++;
 	}
 	start_process(info);
+	// return (info.error_status);
 	exit(0);
 }

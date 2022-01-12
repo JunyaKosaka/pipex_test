@@ -1,20 +1,29 @@
 #include "pipex.h"
 
-static int	get_filefd(t_info info, int i)
+static int	get_filefd(t_info *info, int i)
 {
 	int	fd;
 
-	if (info.file && i == 2)
-		fd = open(info.file, R_OK);
-	else if (info.file && i + 2 == info.argc)
+	if (info->file && i == 2)
 	{
-		if (info.is_here_doc == false)
+		if (!is_valid_file(*info)) // 子プロセスでやるべきかも？
 		{
-			unlink(info.file);
-			fd = open(info.file, O_CREAT | W_OK, 0644);
+			ft_putstr_fd("pipex: ", 2);
+			perror(info->argv[1]);
+			info->error_status = errno;
+		}
+		// is_valid_file();
+		fd = open(info->file, R_OK);
+	}
+	else if (info->file && i + 2 == info->argc)
+	{
+		if (info->is_here_doc == false)
+		{
+			unlink(info->file);
+			fd = open(info->file, O_CREAT | W_OK, 0644);
 		}
 		else
-			fd = open(info.file, O_APPEND | W_OK | O_CREAT, 0644);
+			fd = open(info->file, O_APPEND | W_OK | O_CREAT, 0644);
 	}
 	else
 		fd = NOFILE;
@@ -66,14 +75,15 @@ static void	child_exe(t_info info, int i)
 		close(info.pipefd[0][1]);
 		exit(0);
 	}
-	filefd = get_filefd(info, i);
+	filefd = get_filefd(&info, i);
 	if (filefd == -1)
-		exit(1);//エラー文　mallocリークチェック
+		exit(1); //エラー文　mallocリークチェック
 	dup2_func(info, filefd, i);
 	close_func(info, filefd, i);
 	execve(info.cmd_full_path, info.cmd, info.envp);
 	// ft_putendl_fd("pipex: illegal option", 2);
-	return ;
+	exit(1) ;
+	// return ;
 }
 
 static void	set_elements(t_info *info, int i)
@@ -118,10 +128,21 @@ void	start_process(t_info info)
 		}
 		i++;
 	}
-	waitpid(info.pid[0], &wstatus, WUNTRACED);
-	waitpid(info.pid[1], &wstatus, WUNTRACED);
-
-	exit(wstatus);  // 終了ステータス
+	i = 0;
+	while (i < info.argc - 3 - info.is_here_doc)
+	{
+		int	res = waitpid(info.pid[i], &wstatus, WUNTRACED);
+		printf("125: %d %d\n", res, wstatus);
+		printf("127: %d %d\n", i, WEXITSTATUS(wstatus));
+		if (res == -1)
+		{
+			exit(errno);// だめそう
+		}
+		i++;
+	}
+	printf("146\n");
+	// exit(info.error_status);
+	// exit(wstatus);  // 終了ステータス
 }
 
 
