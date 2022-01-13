@@ -49,11 +49,13 @@ void	convert_to_cmd_full_path(t_info *info, int i)
 			free_2arr((void **)all_paths);
 			return ;
 		}
+		free(info->cmd_full_path[i]);
 		c_index++;
 	}
 	free_2arr((void **)all_paths);
 	write(2, "pipex: command not found: ", 26);
 	ft_putendl_fd(info->cmd[i][0], 2);
+	
 	// perror(info->cmd[0]);
 	// strerror(127);
 	info->error_status = 127;

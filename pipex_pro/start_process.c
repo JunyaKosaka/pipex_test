@@ -132,6 +132,7 @@ int	start_process(t_info info)
 		}
 		i++;
 	}
+	info.cmd_full_path[i - 2] = NULL;
 	i = 0;
 	while (i < info.argc - 3 - info.is_here_doc)
 	{
