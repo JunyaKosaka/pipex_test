@@ -32,15 +32,3 @@ int main(void) {
 	printf("exit_success\n");
     exit(EXIT_SUCCESS);
 }
-
-int arr[4] = {1, 32, 2, 10};
-// int x = 3;
-int arr2[4] = {2, 2, 2, 3};
-int arr3[4] = {-1, -1, -1, -1};
-
-int i = 0;
-while (1)
-{
-    printf("%d\n", arr2[i]);
-    i++; // i--;
-}
