@@ -34,9 +34,9 @@ fclean: clean
 re: fclean all
 
 retest: ${NAME}
-#                     process0 process1  
-	./${NAME} small.txt "cat" "head -n 4" file
-#                   filefd  pipe0    
+#                     process0 process1
+	./${NAME} small.txt "cat" "hedad -n 4" file
+#                   filefd  pipe0
 	wc file
 
 test: fclean retest
