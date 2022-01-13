@@ -11,7 +11,7 @@ LIBFT		= libft.a
 
 CC			= gcc
 
-CFLAGS		= -Wall -Wextra -Werror -fsanitize=address -g3
+CFLAGS		= -Wall -Wextra -Werror #-fsanitize=address -g3
 
 RM			= rm -f
 

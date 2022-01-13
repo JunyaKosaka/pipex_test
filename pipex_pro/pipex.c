@@ -14,7 +14,11 @@ static void	get_here_doc(t_info *info)
 	temp = get_next_line(0);
 	while (ft_strncmp(temp, info->limiter, len))
 	{
-		info->total_document = ft_strjoin(info->total_document, temp, 1);
+		char *temp;
+		temp = ft_strjoin(info->total_document, "");
+		free(info->total_document);
+		info->total_document = temp;
+		free(temp);
 		if (!info->total_document)
 		{
 			free(temp); // ダブルfree注意
@@ -86,6 +90,6 @@ int	main(int argc, char **argv, char **envp)
 	// exit(0);
 	printf("return : %d\n", info.error_status);
 	free_all_info(&info, false);
-	// system("leaks -q pipex");
+	system("leaks -q pipex");
 	exit(info.error_status);
 }

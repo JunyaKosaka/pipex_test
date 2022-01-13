@@ -35,8 +35,10 @@ void	convert_to_cmd_full_path(t_info *info, int i)
 	c_index = 0;
 	while (all_paths[c_index])
 	{
-		info->cmd_full_path[i] = ft_strjoin(all_paths[c_index], "/", 0);
-		info->cmd_full_path[i] = ft_strjoin(info->cmd_full_path[i], info->cmd[i][0], 1);
+		char *temp;
+		temp = ft_strjoin(all_paths[c_index], "/");
+		info->cmd_full_path[i] = ft_strjoin(temp, info->cmd[i][0]);
+		free(temp);
 		if (!info->cmd_full_path[i])
 		{
 			free_2arr((void **)all_paths);
