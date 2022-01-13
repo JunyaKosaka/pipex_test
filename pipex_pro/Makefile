@@ -11,7 +11,7 @@ LIBFT		= libft.a
 
 CC			= gcc
 
-CFLAGS		= -Wall -Wextra -Werror #-fsanitize=address -g3
+CFLAGS		= -Wall -Wextra -Werror -fsanitize=address -g3
 
 RM			= rm -f
 
@@ -34,7 +34,9 @@ fclean: clean
 re: fclean all
 
 retest: ${NAME}
-	./${NAME} small.txt "cat" "head -n 2" file
+#                     process0 process1  
+	./${NAME} small.txt "cat" "head -n 4" file
+#                   filefd  pipe0    
 	wc file
 
 test: fclean retest

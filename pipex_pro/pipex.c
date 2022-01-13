@@ -34,10 +34,10 @@ static void	init_info(t_info *info)
 	info->pid = (pid_t *)malloc(sizeof(pid_t) * process_cnt);
 	if (!info->pid)
 		exit(free_all_info(info, true));
-	info->pipefd = (int **)malloc(sizeof(int *) * (process_cnt + 1));
+	info->pipefd = (int **)malloc(sizeof(int *) * (process_cnt));
 	if (!info->pipefd)
 		exit(free_all_info(info, true));
-	info->pipefd[process_cnt] = NULL;
+	info->pipefd[process_cnt - 1] = NULL;
 	info->cmd_full_path = (char **)malloc(sizeof(char *) * (process_cnt + 1));
 	if (!info->cmd_full_path)
 		exit(free_all_info(info, true));
@@ -54,6 +54,7 @@ int	main(int argc, char **argv, char **envp)
 	int			i;
 
 	printf("\n");
+	printf("main %d\n", getpid());
 	info.argv = argv;
 	info.argc = argc;
 	info.envp = envp;
@@ -72,7 +73,7 @@ int	main(int argc, char **argv, char **envp)
 	info.process_cnt = argc - 3 - info.is_here_doc;
 	init_info(&info);
 	i = 0;
-	while (i < info.process_cnt) // 1つ多くとっている
+	while (i < info.process_cnt - 1) // 1つ多くとっている
 	{
 		info.pipefd[i] = (int *)malloc(sizeof(int) * 2);
 		if (!info.pipefd[i])
@@ -85,6 +86,6 @@ int	main(int argc, char **argv, char **envp)
 	// exit(0);
 	printf("return : %d\n", info.error_status);
 	free_all_info(&info, false);
-	system("leaks -q pipex");
+	// system("leaks -q pipex");
 	exit(info.error_status);
 }

@@ -36,29 +36,30 @@ static void	dup2_func(t_info *info, int filefd, int i)
 		dup2(filefd, 0);
 		dup2(info->pipefd[i - 2][1], 1);
 	}
-	else if (filefd != NOFILE && i + 2 == info->argc)
+	else if (filefd != NOFILE && i + 2 == info->argc)// i=4 process2
 	{
 		dup2(filefd, 1);
 		dup2(info->pipefd[i - 3][0], 0);
 	}
 	else
 	{
-		dup2(info->pipefd[i - 3][0], 0);
+		dup2(info->pipefd[i - 3][0], 0); // i =3 process1
 		dup2(info->pipefd[i - 2][1], 1);
 	}
 }
 
-static void	close_func(t_info *info, int filefd, int i)
+static void	close_func(t_info *info, int filefd, int i) // i = 2 3;
 {
-	if (filefd != NOFILE && i == 2)
+	if (filefd != NOFILE && i == 2) // i=2
 		close(info->pipefd[i - 2][0]);
-	else if (filefd != NOFILE && i + 2 == info->argc)
+	else if (filefd != NOFILE && i + 2 == info->argc) // i =3
 		close(info->pipefd[i - 3][1]);
 	else
 		close(info->pipefd[i - 3][1]);
 	if (filefd != NOFILE)
 		close(filefd);
-	close(info->pipefd[i - 2][1]);
+	if (i + 2 != info->argc)
+		close(info->pipefd[i - 2][1]); // i = 2
 }
 
 static void	set_elements(t_info *info, int i)
@@ -106,7 +107,7 @@ int	start_process(t_info info)
 	int	i;
 
 	i = 2;
-	while (i + 1 < info.argc)
+	while (i + 1 < info.argc) // argc: 5
 	{
 		set_elements(&info, i);  // 子プロセスでやるべき？
 		if (i + 2 != info.argc && (pipe(info.pipefd[i - 2]) < 0))
@@ -114,14 +115,16 @@ int	start_process(t_info info)
 			perror("pipe");
 			exit(-1);
 		}
+		printf("start process %d\n", getpid());
 		info.pid[i - 2] = fork();  // 親と子に別れて、infoも別なのか？
+		// printf("119 %d\n", info.pid[i-2]);
 		if (info.pid[i - 2] == -1)
 			exit(free_all_info(&info, true));
 		else if (info.pid[i - 2] == 0)
 			child_exe(&info, i);
 		else
 		{
-			if (i != 2)
+			if (i != 2) // i = 3 4
 			{
 				close(info.pipefd[i - 3][0]);
 				close(info.pipefd[i - 3][1]);
