@@ -53,6 +53,7 @@ int		start_process(t_info info);
 int		error_handler(void);
 int		free_all_info(t_info *info, bool error);
 void	free_2arr(void **arr);
+void	safe_func(int res, t_info *info);
 
 #endif
 

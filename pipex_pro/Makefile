@@ -3,7 +3,7 @@ NAME		= pipex
 SRCS		= pipex.c cmd_full_path.c start_process.c \
 			get_next_line.c get_next_line_utils.c \
 			valid_utils.c error_handler.c \
-			free.c \
+			free.c safe_system_call.c \
 
 OBJS		= $(SRCS:%.c=%.o)
 

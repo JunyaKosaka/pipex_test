@@ -30,13 +30,18 @@ void	convert_to_cmd_full_path(t_info *info, int i)
 	if (e_index == -1)
 		exit(1);
 	all_paths = ft_split(&(info->envp[e_index][5]), ':');
+	if (!all_paths)
+		exit(free_all_info(info, true));
 	c_index = 0;
-	int k = 0;
-
 	while (all_paths[c_index])
 	{
 		info->cmd_full_path[i] = ft_strjoin(all_paths[c_index], "/", 0);
 		info->cmd_full_path[i] = ft_strjoin(info->cmd_full_path[i], info->cmd[i][0], 1);
+		if (!info->cmd_full_path[i])
+		{
+			free_2arr((void **)all_paths);
+			exit(free_all_info(info, true));
+		}
 		if (!access(info->cmd_full_path[i], X_OK))
 		{
 			free_2arr((void **)all_paths);
@@ -44,6 +49,7 @@ void	convert_to_cmd_full_path(t_info *info, int i)
 		}
 		c_index++;
 	}
+	free_2arr((void **)all_paths);
 	write(2, "pipex: command not found: ", 26);
 	ft_putendl_fd(info->cmd[i][0], 2);
 	// perror(info->cmd[0]);
