@@ -14,6 +14,7 @@
 # include <errno.h>
 # include <sys/types.h>
 # include <sys/uio.h>
+# include <malloc/malloc.h>
 
 # define STDIN 0
 # define STDOUT 1
@@ -51,6 +52,7 @@ void	*free_all(char **s1, char **s2);
 int		start_process(t_info info);
 int		error_handler(void);
 int		free_all_info(t_info *info, bool error);
+void	free_2arr(void **arr);
 
 #endif
 

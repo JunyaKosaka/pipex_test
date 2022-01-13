@@ -7,14 +7,14 @@ static void	get_here_doc(t_info *info)
 
 	info->total_document = ft_strdup("");
 	if (!info->total_document)
-		exit(error_handler());	
+		exit(error_handler());
 	len = ft_strlen(info->limiter);
 	info->limiter[len] = '\n';
 	len++;
 	temp = get_next_line(0);
 	while (ft_strncmp(temp, info->limiter, len))
 	{
-		info->total_document = ft_strjoin(info->total_document, temp);
+		info->total_document = ft_strjoin(info->total_document, temp, 1);
 		if (!info->total_document)
 		{
 			free(temp); // ダブルfree注意
@@ -43,9 +43,10 @@ static void	init_info(t_info *info)
 	if (!info->cmd_full_path)
 		exit(free_all_info(info, true));
 	info->cmd_full_path[process_cnt] = NULL;
-	info->cmd = (char ***)malloc(sizeof(char *) * process_cnt);
+	info->cmd = (char ***)malloc(sizeof(char *) * (process_cnt + 1));
 	if (!info->cmd)
 		exit(free_all_info(info, true));
+	info->cmd[process_cnt] = NULL;
 }
 
 int	main(int argc, char **argv, char **envp)

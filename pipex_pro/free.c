@@ -13,6 +13,7 @@ void	free_2arr(void **arr)
 		arr[i] = NULL;
 		i++;
 	}
+	free(arr[i]);
 	free(arr);
 }
 
@@ -26,22 +27,24 @@ static void	free_info(t_info *info)
 	free_2arr((void **)info->pipefd);
 	free_2arr((void **)info->cmd_full_path);
 	int	i = 0;
-	while (i < process_cnt)
+	while (info->cmd[i])
 	{
-		free_2arr((void **)info->cmd[i]);
+		free_2arr((void **)(info->cmd[i]));
 		i++;
 	}
+	free(info->cmd[i]);
+	free(info->cmd);
 	if (info->total_document)
 		free(info->total_document);
 	if (info->pid)
 		free(info->pid);
 }
 
-int	free_all_info(t_info *info, bool error)
+int	free_all_info(t_info *info, bool is_error)
 {
 	if (info)
 		free_info(info);
-	if (error)
-		exit(error_handler());
+	if (is_error)
+		return (error_handler());
 	return (0);
 }

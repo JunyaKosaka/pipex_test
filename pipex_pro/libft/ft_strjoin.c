@@ -6,7 +6,7 @@
 /*   By: kahirose <kahirose@studnt.42tokyo.jp>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 14:58:31 by kahirose          #+#    #+#             */
-/*   Updated: 2021/11/02 16:24:25 by kahirose         ###   ########.fr       */
+/*   Updated: 2022/01/13 15:51:19 by kahirose         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static char	*ft_strcat(char *dest, char *src)
 	return (dest);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char const *s1, char const *s2, int flag)
 {
 	char	*str1;
 	char	*str2;
@@ -48,6 +48,8 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		return (NULL);
 	new = ft_strcat(new, str1);
 	new = ft_strcat(new, str2);
+	if (flag == 1)
+		free(str1);
 	return (new);
 }
 
