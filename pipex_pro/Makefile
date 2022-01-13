@@ -35,14 +35,14 @@ re: fclean all
 
 retest: ${NAME}
 #                     process0 process1
-	./${NAME} small.txt "cat" "hedad -n 4" file
+	./${NAME}
 #                   filefd  pipe0
 	wc file
 
 test: fclean retest
 
 heretest: ${NAME}
-	./${NAME} here_doc aaa cat "head -n 2" "tail -n 1" wc file
+	./${NAME} here_doc aaa wc file
 	cat file
 
 here: fclean heretest

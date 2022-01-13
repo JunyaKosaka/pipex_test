@@ -58,7 +58,7 @@ int	main(int argc, char **argv, char **envp)
 	int			i;
 
 	printf("\n");
-	printf("main %d\n", getpid());
+	printf("mainstart %d\n", getpid());
 	info.argv = argv;
 	info.argc = argc;
 	info.envp = envp;
@@ -66,6 +66,7 @@ int	main(int argc, char **argv, char **envp)
 	info.is_here_doc = false;
 	info.total_document = NULL;
 	info.cmd_full_path = NULL;
+	printf("argc: %d, argv[1]: %s\n", argc, argv[1]);
 	if (!ft_strncmp(argv[1], "here_doc", 9))
 	{
 		if (argc < 6)
@@ -73,6 +74,10 @@ int	main(int argc, char **argv, char **envp)
 		info.is_here_doc = true;
 		info.limiter = argv[2];
 		get_here_doc(&info);
+	}
+	if (argc < 5)
+	{
+		exit(error_handler());
 	}
 	info.process_cnt = argc - 3 - info.is_here_doc;
 	init_info(&info);
@@ -90,6 +95,7 @@ int	main(int argc, char **argv, char **envp)
 	// exit(0);
 	printf("return : %d\n", info.error_status);
 	free_all_info(&info, false);
+	printf("main %d\n", getpid());
 	system("leaks -q pipex");
 	exit(info.error_status);
 }

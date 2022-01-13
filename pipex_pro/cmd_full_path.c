@@ -21,9 +21,9 @@ void	convert_to_cmd_full_path(t_info *info, int i)
 	int		c_index;
 
 	i -= 2;
-	if (!access(info->cmd[i][0], R_OK))
+	if (!access(info->cmd[i][0], X_OK))
 	{
-		info->cmd_full_path[i] = info->cmd[i][0];
+		info->cmd_full_path[i] = ft_strdup(info->cmd[i][0]);
 		return ;
 	}
 	e_index = path_index(*info);
@@ -35,6 +35,7 @@ void	convert_to_cmd_full_path(t_info *info, int i)
 	c_index = 0;
 	while (all_paths[c_index])
 	{
+		printf("cmd_full_path56:running: %d\n", i);
 		char *temp;
 		temp = ft_strjoin(all_paths[c_index], "/");
 		info->cmd_full_path[i] = ft_strjoin(temp, info->cmd[i][0]);
@@ -59,6 +60,6 @@ void	convert_to_cmd_full_path(t_info *info, int i)
 
 	// perror(info->cmd[0]);
 	// strerror(127);
-	info->error_status = 127;
+	// info->error_status = 127;
 	// exit(127); // 間違い　error statusは上書きして最後が残る
 }

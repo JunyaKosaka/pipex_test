@@ -28,7 +28,7 @@ error_statusの取得方法を調べる
 errno 2は24行目アクセス関数で設定されてる(builtinの誤用)
 
 システムコールのエラー処理！！
-open, close, dup2, fork, pipe, 
+open, close, dup2, fork, pipe,
 access, unlink, malloc, waitpid,
 
 get_next_lineを自分用に変える、自分のjoinの失敗ダブルfree危険
@@ -37,3 +37,7 @@ get_next_lineを自分用に変える、自分のjoinの失敗ダブルfree危�
 g3で関数の場所を教えてくれる
 
 objdump -d pipex | grep main
+
+
+forkについて
+forkすると親の仮想アドレス空間を複製した仮想アドレス空間が、子プロセス用に作られる

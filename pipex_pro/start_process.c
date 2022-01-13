@@ -73,6 +73,7 @@ static void	set_elements(t_info *info, int i)
 	{
 		info->cmd[i - 2] = ft_split(info->argv[i], ' ');
 		convert_to_cmd_full_path(info, i);
+
 	}
 }
 
@@ -96,7 +97,10 @@ static void	child_exe(t_info *info, int i)
 	dup2_func(info, filefd, i);
 	close_func(info, filefd, i);
 	fprintf(stderr, "errno: %d\n", errno);
+	fprintf(stderr, "100: %s\n", info->cmd_full_path[i - 2]);
 	execve(info->cmd_full_path[i - 2], info->cmd[i - 2], info->envp);
+	fprintf(stderr, "102: %s\n", info->cmd_full_path[i - 2]);
+
 	// ft_putendl_fd("pipex: illegal option", 2);
 	exit(127);
 }
@@ -105,6 +109,7 @@ int	start_process(t_info info)
 {
 	int	wstatus;
 	int	i;
+	int aaa = 0;
 
 	i = 2;
 	while (i + 1 < info.argc) // argc: 5
@@ -116,8 +121,8 @@ int	start_process(t_info info)
 			exit(-1);
 		}
 		printf("start process %d\n", getpid());
-		info.pid[i - 2] = fork();  // 親と子に別れて、infoも別なのか？
-		// printf("119 %d\n", info.pid[i-2]);
+		info.pid[i - 2] = fork();
+		printf("pointer : %p\n", &aaa);
 		if (info.pid[i - 2] == -1)
 			exit(free_all_info(&info, true));
 		else if (info.pid[i - 2] == 0)
