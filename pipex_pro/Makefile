@@ -34,13 +34,13 @@ fclean: clean
 re: fclean all
 
 retest: ${NAME}
-	./${NAME} small.txt cat "head -n 4" "tail -n 2" xx.dir
-	wc file
+	./${NAME} small.txt cat "head -n 4" "tail -n 2" file2
+	wc file2
 
 test: fclean retest
 
 heretest: ${NAME}
-	./${NAME} here_doc aaa wc xx.dir
+	./${NAME} here_doc aaa cat "head -n 1" file
 	cat file
 
 here: fclean heretest

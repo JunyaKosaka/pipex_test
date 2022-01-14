@@ -4,6 +4,7 @@ static void	get_here_doc(t_info *info)
 {
 	int		len;
 	char	*temp;
+	char	*new_document;
 
 	info->total_document = ft_strdup("");
 	if (!info->total_document)
@@ -14,17 +15,15 @@ static void	get_here_doc(t_info *info)
 	temp = get_next_line(0);
 	while (ft_strncmp(temp, info->limiter, len))
 	{
-		char *temp;
-		temp = ft_strjoin(info->total_document, "");
-		free(info->total_document);
-		info->total_document = temp;
-		free(temp);
-		if (!info->total_document)
+		new_document = ft_strjoin(info->total_document, temp);
+		if (!new_document)
 		{
 			free(temp); // ダブルfree注意
-			free(info->total_document);
+			exit(free_all_info(info, true));
 		}
+		free(info->total_document);
 		free(temp);
+		info->total_document = new_document;
 		temp = get_next_line(0);  // aaa
 	}
 	free(temp);
@@ -57,8 +56,6 @@ int	main(int argc, char **argv, char **envp)
 	t_info		info;
 	int			i;
 
-	printf("\n");
-	printf("mainstart %d\n", getpid());
 	info.argv = argv;
 	info.argc = argc;
 	info.envp = envp;
@@ -66,7 +63,6 @@ int	main(int argc, char **argv, char **envp)
 	info.is_here_doc = false;
 	info.total_document = NULL;
 	info.cmd_full_path = NULL;
-	printf("argc: %d, argv[1]: %s\n", argc, argv[1]);
 	if (!ft_strncmp(argv[1], "here_doc", 9))
 	{
 		if (argc < 6)
@@ -80,7 +76,7 @@ int	main(int argc, char **argv, char **envp)
 		exit(error_handler());
 	}
 	info.process_cnt = argc - 3 - info.is_here_doc;
-	init_info(&info);
+ 	init_info(&info);
 	i = 0;
 	while (i < info.process_cnt - 1) // 1つ多くとっている
 	{
@@ -95,7 +91,6 @@ int	main(int argc, char **argv, char **envp)
 	// exit(0);
 	printf("return : %d\n", info.error_status);
 	free_all_info(&info, false);
-	printf("main %d\n", getpid());
 	system("leaks -q pipex");
 	exit(info.error_status);
 }
