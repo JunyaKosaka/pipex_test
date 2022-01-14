@@ -75,14 +75,16 @@ static void	set_elements(t_info *info, int i)
 		info->cmd[i - 2] = ft_split(info->argv[i], ' ');
 		convert_to_cmd_full_path(info, i);
 	}
+	printf("set_element\n");
 }
 
-static void	child_exe(t_info *info, int i)
+static void	child_exe(t_info *info, int i) // normal i = 2 start, here_doc i = 3 start
 {
 	int	filefd;
 	int	total_len;
 
 	// set_elements(info, i);
+	printf("86\n");
 	if (info->is_here_doc == true && i == 3)
 	{
 		// fprintf("%s\n", info->total_document);
@@ -100,9 +102,9 @@ static void	child_exe(t_info *info, int i)
 	}
 	dup2_func(info, filefd, i);
 	close_func(info, filefd, i);
-	fprintf(stderr, "100: %s\n", info->cmd_full_path[i - 2]);
-	execve(info->cmd_full_path[i - 2], info->cmd[i - 2], info->envp);
-	fprintf(stderr, "102: %s\n", info->cmd_full_path[i - 2]);
+	fprintf(stderr, "100: %s\n", info->cmd_full_path[i - 2 - info->is_here_doc]);
+	execve(info->cmd_full_path[i - 2 - info->is_here_doc], info->cmd[i - 2 - info->is_here_doc], info->envp);
+	fprintf(stderr, "102: %s\n", info->cmd_full_path[i - 2 - info->is_here_doc]);
 
 	// ft_putendl_fd("pipex: illegal option", 2);
 	exit(127);
@@ -113,26 +115,28 @@ int	start_process(t_info info)
 	int	wstatus;
 	int	i;
 
-	i = 2 + info.is_here_doc;
+	i = 2 + info.is_here_doc;  // index 整える
 	while (i + 1 < info.argc) // argc: 5
 	{
 		set_elements(&info, i);  // 子プロセスでやるべき？
-		if (i + 2 != info.argc && (pipe(info.pipefd[i - 2]) < 0))
+		if (i + 2 != info.argc && (pipe(info.pipefd[i - 2 - info.is_here_doc]) < 0))
 		{
+
 			perror("pipe");
 			exit(-1);
 		}
-		info.pid[i - 2] = fork();
-		if (info.pid[i - 2] == -1)
+		printf("119 %d\n", i);
+		info.pid[i - 2 - info.is_here_doc] = fork();
+		if (info.pid[i - 2 - info.is_here_doc] == -1)
 			exit(free_all_info(&info, true));
-		else if (info.pid[i - 2] == 0)
-			child_exe(&info, i);
+		else if (info.pid[i - 2 - info.is_here_doc] == 0)
+			child_exe(&info, i); // 0 start
 		else
 		{
-			if (i != 2) // i = 3 4
+			if (i != 2 + info.is_here_doc) // i = 3 4
 			{
-				close(info.pipefd[i - 3][0]);
-				close(info.pipefd[i - 3][1]);
+				close(info.pipefd[i - 3 - info.is_here_doc][0]);
+				close(info.pipefd[i - 3 - info.is_here_doc][1]);
 			}
 		}
 		i++;
