@@ -1,0 +1,50 @@
+エラーの出る順番
+cat | ls などの実行順序
+sleep 5 | ls -> ok
+大きいデータサイズ -> ok
+終了ステータス 0~255
+
+dup関数流れ＝＝＝＝＝＝
+dup2(pipefd[1], 1)だとpipefd[1]が標準入力に変わってるのでpipefd[1]は必要なくなり閉じていい
+＝＝＝＝＝＝＝＝＝＝＝＝
+
+
+最大プロセス数:　引数のコマンド数大きくすると？
+パイプのサイズ
+システムコールエラーチェック
+パイプmalloc
+waitpit whileで回す
+
+エラー処理
+：command not found / No such file or directory / illegal option
+
+
+
+実装しなくていいかも：parse error near '\n'
+
+正常に実行されなかった場合、waitpid() は -1 を戻して、errno を次のいずれかの値に設定します。
+
+command not found 本家の終了ステータスが127
+
+exitを削除して→info.error_statusを上書きしていく
+start_processをポインタ型に変更
+error_statusの取得方法を調べる
+
+errno 2は24行目アクセス関数で設定されてる(builtinの誤用)
+
+システムコールのエラー処理！！
+open, close, dup2, fork, pipe,
+access, unlink, malloc, waitpid,
+
+get_next_lineを自分用に変える、自分のjoinの失敗ダブルfree危険
+
+-fsanitize=address -g3
+g3で関数の場所を教えてくれる
+
+objdump -d pipex | grep main
+
+
+forkについて
+forkすると親の仮想アドレス空間を複製した仮想アドレス空間が、子プロセス用に作られる
+
+

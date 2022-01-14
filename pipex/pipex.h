@@ -1,0 +1,64 @@
+#ifndef PIPEX_H
+# define PIPEX_H
+
+# include <stdio.h>
+# include <stdlib.h>
+# include <stdbool.h>
+# include <string.h>
+# include <unistd.h>
+# include <sys/wait.h>
+# include <limits.h>
+# include <fcntl.h>
+# include "libft/libft.h"
+
+# include <errno.h>
+# include <sys/types.h>
+# include <sys/uio.h>
+# include <malloc/malloc.h>
+
+# define STDIN 0
+# define STDOUT 1
+# define STDERR 2
+# define PIPEIN 0
+# define PIPEOUT 1
+# define NOFILE -2
+# define FD_MAX 256
+# define PATH_PREFIX 5
+
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 256
+# endif
+
+typedef struct s_info
+{
+	int		**pipefd;
+	int		argc;
+	int		process_cnt;
+	char	**argv;
+	char	**envp;
+	char	**cmd_full_path;
+	char	***cmd;
+	char	*file; // [2]
+	bool	is_here_doc;
+	char	*total_document;
+	char	*limiter;
+	pid_t	*pid;
+	int		error_status;
+	int		first_cmd_index;
+}	t_info;
+
+bool	is_valid_file(t_info info);
+bool	is_valid_cmds(t_info info);
+void	convert_to_cmd_full_path(t_info *info, int i);
+char	*get_next_line(int fd);
+void	*free_one(char **s);
+void	*free_all(char **s1, char **s2);
+int		start_process(t_info info);
+int		error_handler(void);
+int		free_all_info(t_info *info, bool error);
+void	free_2arr(void **arr);
+void	safe_func(int res, t_info *info);
+
+#endif
+
+
