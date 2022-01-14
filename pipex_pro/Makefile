@@ -34,15 +34,13 @@ fclean: clean
 re: fclean all
 
 retest: ${NAME}
-#                     process0 process1
-	./${NAME}
-#                   filefd  pipe0
+	./${NAME} small.txt cat "head -n 4" "tail -n 2" xx.dir
 	wc file
 
 test: fclean retest
 
 heretest: ${NAME}
-	./${NAME} here_doc aaa wc file
+	./${NAME} here_doc aaa wc xx.dir
 	cat file
 
 here: fclean heretest

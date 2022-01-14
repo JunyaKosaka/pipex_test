@@ -18,11 +18,15 @@ static int	get_filefd(t_info *info, int i)
 	{
 		if (info->is_here_doc == false)
 		{
+			access(info->file, R_OK);
+			// directoryの判定
 			unlink(info->file);
 			fd = open(info->file, O_CREAT | W_OK, 0644);
 		}
 		else
+		{
 			fd = open(info->file, O_APPEND | W_OK | O_CREAT, 0644);
+		}
 	}
 	else
 		fd = NOFILE;
@@ -73,7 +77,6 @@ static void	set_elements(t_info *info, int i)
 	{
 		info->cmd[i - 2] = ft_split(info->argv[i], ' ');
 		convert_to_cmd_full_path(info, i);
-
 	}
 }
 
@@ -93,7 +96,10 @@ static void	child_exe(t_info *info, int i)
 	}
 	filefd = get_filefd(info, i);
 	if (filefd == -1)
+	{
+		printf("========96\n");
 		exit(1); //エラー文　mallocリークチェック
+	}
 	dup2_func(info, filefd, i);
 	close_func(info, filefd, i);
 	fprintf(stderr, "errno: %d\n", errno);

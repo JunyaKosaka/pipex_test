@@ -35,7 +35,7 @@ void	convert_to_cmd_full_path(t_info *info, int i)
 	c_index = 0;
 	while (all_paths[c_index])
 	{
-		printf("cmd_full_path56:running: %d\n", i);
+		// printf("cmd_full_path56:running: %d\n", i);
 		char *temp;
 		temp = ft_strjoin(all_paths[c_index], "/");
 		info->cmd_full_path[i] = ft_strjoin(temp, info->cmd[i][0]);
@@ -54,6 +54,7 @@ void	convert_to_cmd_full_path(t_info *info, int i)
 		info->cmd_full_path[i] = NULL;
 		c_index++;
 	}
+	info->cmd_full_path[i] = ft_strdup("");
 	free_2arr((void **)all_paths);
 	write(2, "pipex: command not found: ", 26);
 	ft_putendl_fd(info->cmd[i][0], 2);
